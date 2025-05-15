@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'yaml'
+
 class RotorWiring
   class << self
     def I
@@ -158,6 +162,9 @@ class Enigma
     @plugboard.backward_encode_letter(l)
   end
 end
+
+data = YAML.load_file('enigma.yml')
+puts data.inspect
 
 enigma = Enigma.new(
   rotors: [

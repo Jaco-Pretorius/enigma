@@ -1,0 +1,24 @@
+---
+rotors:
+  - name: I
+    wiring: EKMFLGDQVZNTOWYHXUSPAIBRCJ
+    notch: Q
+  - name: II
+    wiring: AJDKSIRUXBLHWTMCQGZNPYFVOE
+    notch: E
+  - name: III
+    wiring: BDFHJLCPRTXVZNYEIWGAKMUSQO
+    notch: V
+  - name: IV
+    wiring: ESOVPZJAYQUIRHXLNFTGKDCMWB
+    notch: J
+  - name: V
+    wiring: VZBRGITYUPSDXNFHJLCAKQOMEW
+    notch: Z
+reflectors:
+  - name: A
+    wiring: EJMZALYXVBWFCRQUONTSPIKHGD
+  - name: B
+    wiring: YRUHQSLDPXGZNTOKIJMECFBAWV
+  - name: C
+    wiring: FVPJIAOYEDRZXWGCTKUQSBNMHL
