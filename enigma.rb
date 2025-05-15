@@ -3,21 +3,21 @@ class RotorWiring
     def I
       new(
         name: 'I',
-        mapping: 'EKMFLGDQVZNTOWYHXUSPAIBRCJ'.downcase
+        mapping: 'EKMFLGDQVZNTOWYHXUSPAIBRCJ'
       )
     end
 
     def II
       new(
         name: 'II',
-        mapping: 'AJDKSIRUXBLHWTMCQGZNPYFVOE'.downcase
+        mapping: 'AJDKSIRUXBLHWTMCQGZNPYFVOE'
       )
     end
 
     def III
       new(
         name: 'III',
-        mapping: 'BDFHJLCPRTXVZNYEIWGAKMUSQO'.downcase
+        mapping: 'BDFHJLCPRTXVZNYEIWGAKMUSQO'
       )
     end
   end
@@ -43,17 +43,17 @@ class Rotor
   end
 
   def forward_encode_letter(letter)
-    input_index = (letter.ord - 'a'.ord + @position) % 26
+    input_index = (letter.ord - 'A'.ord + @position) % 26
     mapped_letter = @rotor_wiring.mapping[input_index]
-    output_index = (mapped_letter.ord - 'a'.ord - @position) % 26
-    (output_index + 'a'.ord).chr
+    output_index = (mapped_letter.ord - 'A'.ord - @position) % 26
+    (output_index + 'A'.ord).chr
   end
 
   def backward_encode_letter(letter)
-    input_index = (letter.ord - 'a'.ord + @position) % 26
-    index_in_wiring = @rotor_wiring.mapping.index((input_index + 'a'.ord).chr)
+    input_index = (letter.ord - 'A'.ord + @position) % 26
+    index_in_wiring = @rotor_wiring.mapping.index((input_index + 'A'.ord).chr)
     output_index = (index_in_wiring - @position) % 26
-    (output_index + 'a'.ord).chr
+    (output_index + 'A'.ord).chr
   end
 
   def rotate
@@ -64,12 +64,12 @@ end
 # This appears to be Reflector B-wide https://en.wikipedia.org/wiki/Enigma_rotor_details
 class Reflector
   MAPPING = {
-    'a' => 'y', 'b' => 'r', 'c' => 'u', 'd' => 'h', 'e' => 'q',
-    'f' => 's', 'g' => 'l', 'h' => 'd', 'i' => 'p', 'j' => 'x',
-    'k' => 'n', 'l' => 'g', 'm' => 'o', 'n' => 'k', 'o' => 'm',
-    'p' => 'i', 'q' => 'e', 'r' => 'b', 's' => 'f', 't' => 'z',
-    'u' => 'c', 'v' => 'w', 'w' => 'v', 'x' => 'j', 'y' => 'a',
-    'z' => 't'
+    'A' => 'Y', 'B' => 'R', 'C' => 'U', 'D' => 'H', 'E' => 'Q',
+    'F' => 'S', 'G' => 'L', 'H' => 'D', 'I' => 'P', 'J' => 'X',
+    'K' => 'N', 'L' => 'G', 'M' => 'O', 'N' => 'K', 'O' => 'M',
+    'P' => 'I', 'Q' => 'E', 'R' => 'B', 'S' => 'F', 'T' => 'Z',
+    'U' => 'C', 'V' => 'W', 'W' => 'V', 'X' => 'J', 'Y' => 'A',
+    'Z' => 'T'
   }.freeze
 
   class << self
@@ -117,7 +117,7 @@ class Enigma
   end
 
   def encrypt(message)
-    cleaned = message.downcase.chars.select { |c| ('a'..'z').include?(c) }
+    cleaned = message.upcase.chars.select { |c| ('A'..'Z').include?(c) }
     cleaned.map do |letter|
       rotate
       encrypt_letter(letter)
@@ -163,20 +163,20 @@ enigma = Enigma.new(
   rotors: [
     Rotor.new(rotor_wiring: RotorWiring.II, position: 12),
     Rotor.new(rotor_wiring: RotorWiring.I, position: 7),
-    Rotor.new(rotor_wiring: RotorWiring.III, position: 19),
+    Rotor.new(rotor_wiring: RotorWiring.III, position: 19)
   ],
-  plugboard: Plugboard.new(["ab", "jp"])
+  plugboard: Plugboard.new(%w[AB JP])
 )
-encrypted = enigma.encrypt("the weather is clear")
+encrypted = enigma.encrypt('THE WEATHER IS CLEAR')
 puts encrypted
 
 enigma = Enigma.new(
   rotors: [
     Rotor.new(rotor_wiring: RotorWiring.II, position: 12),
     Rotor.new(rotor_wiring: RotorWiring.I, position: 7),
-    Rotor.new(rotor_wiring: RotorWiring.III, position: 19),
+    Rotor.new(rotor_wiring: RotorWiring.III, position: 19)
   ],
-  plugboard: Plugboard.new(["ab", "jp"])
+  plugboard: Plugboard.new(%w[AB JP])
 )
 decrypted = enigma.encrypt(encrypted)
 
