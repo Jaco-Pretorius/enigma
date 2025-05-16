@@ -41,6 +41,7 @@ class Rotor
 
   def rotate
     @position = (@position + 1) % 26
+    yield if block_given? && @position.zero?
   end
 end
 
@@ -102,14 +103,11 @@ class Enigma
   private
 
   def rotate
-    # Rotate the rightmost rotor every time
-    @rotors[0].rotate
-
-    # If rightmost rotor has completed a full rotation, step the middle rotor
-    @rotors[1].rotate if @rotors[0].position == 0
-
-    # If middle rotor has also completed a full rotation, step the leftmost rotor
-    @rotors[2].rotate if @rotors[1].position == 0 && @rotors[0].position == 0
+    @rotors[0].rotate do
+      @rotors[1].rotate do
+        @rotoes[2].rotate
+      end
+    end
   end
 
   def encrypt_letter(letter)
