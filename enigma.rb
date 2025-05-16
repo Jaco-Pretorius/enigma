@@ -106,25 +106,25 @@ class Enigma
     @rotors[2].rotate if @rotors[1].position == 0 && @rotors[0].position == 0
   end
 
-  def encrypt_letter(l)
+  def encrypt_letter(letter)
     # Pass through plugboard
-    l = @plugboard.forward_encode_letter(l)
+    letter = @plugboard.forward_encode_letter(letter)
 
     # Forward through rotors
     @rotors.each do |rotor|
-      l = rotor.forward_encode_letter(l)
+      letter = rotor.forward_encode_letter(letter)
     end
 
     # Reflect
-    l = @reflector.encode(l)
+    letter = @reflector.encode(letter)
 
     # Backward through rotors in reverse
     @rotors.reverse.each do |rotor|
-      l = rotor.backward_encode_letter(l)
+      letter = rotor.backward_encode_letter(letter)
     end
 
     # Back through plugboard
-    @plugboard.backward_encode_letter(l)
+    @plugboard.backward_encode_letter(letter)
   end
 end
 
