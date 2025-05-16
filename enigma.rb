@@ -2,60 +2,33 @@
 
 require 'yaml'
 
-class RotorWiring
-  class << self
-    def I
-      new(
-        name: 'I',
-        mapping: 'EKMFLGDQVZNTOWYHXUSPAIBRCJ'
-      )
-    end
+class RotorConfiguration
+  attr_reader :name, :wiring
 
-    def II
-      new(
-        name: 'II',
-        mapping: 'AJDKSIRUXBLHWTMCQGZNPYFVOE'
-      )
-    end
-
-    def III
-      new(
-        name: 'III',
-        mapping: 'BDFHJLCPRTXVZNYEIWGAKMUSQO'
-      )
-    end
-  end
-
-  attr_reader :name, :mapping
-
-  private
-
-  def initialize(name:, mapping:)
+  def initialize(name:, wiring:)
     @name = name
-    @mapping = mapping
+    @wiring = wiring
   end
-
-  private_class_method :new
 end
 
 class Rotor
   attr_reader :position
 
-  def initialize(rotor_wiring:, position:)
-    @rotor_wiring = rotor_wiring
+  def initialize(rotor_configuration:, position:)
+    @rotor_configuration = rotor_configuration
     @position = position
   end
 
   def forward_encode_letter(letter)
     input_index = (letter.ord - 'A'.ord + @position) % 26
-    mapped_letter = @rotor_wiring.mapping[input_index]
+    mapped_letter = @rotor_configuration.wiring[input_index]
     output_index = (mapped_letter.ord - 'A'.ord - @position) % 26
     (output_index + 'A'.ord).chr
   end
 
   def backward_encode_letter(letter)
     input_index = (letter.ord - 'A'.ord + @position) % 26
-    index_in_wiring = @rotor_wiring.mapping.index((input_index + 'A'.ord).chr)
+    index_in_wiring = @rotor_configuration.wiring.index((input_index + 'A'.ord).chr)
     output_index = (index_in_wiring - @position) % 26
     (output_index + 'A'.ord).chr
   end
@@ -164,13 +137,19 @@ class Enigma
 end
 
 data = YAML.load_file('enigma.yml')
-puts data.inspect
+
+rotor_i = data['rotors'].find { |r| r['name'] == 'I' }
+rotor_ii = data['rotors'].find { |r| r['name'] == 'II' }
+rotor_iii = data['rotors'].find { |r| r['name'] == 'III' }
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(rotor_wiring: RotorWiring.II, position: 12),
-    Rotor.new(rotor_wiring: RotorWiring.I, position: 7),
-    Rotor.new(rotor_wiring: RotorWiring.III, position: 19)
+    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_ii['name'], wiring: rotor_ii['wiring']),
+              position: 12),
+    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_i['name'], wiring: rotor_i['wiring']),
+              position: 7),
+    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_iii['name'], wiring: rotor_iii['wiring']),
+              position: 19)
   ],
   plugboard: Plugboard.new(%w[AB JP])
 )
@@ -179,9 +158,12 @@ puts encrypted
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(rotor_wiring: RotorWiring.II, position: 12),
-    Rotor.new(rotor_wiring: RotorWiring.I, position: 7),
-    Rotor.new(rotor_wiring: RotorWiring.III, position: 19)
+    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_ii['name'], wiring: rotor_ii['wiring']),
+              position: 12),
+    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_i['name'], wiring: rotor_i['wiring']),
+              position: 7),
+    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_iii['name'], wiring: rotor_iii['wiring']),
+              position: 19)
   ],
   plugboard: Plugboard.new(%w[AB JP])
 )
