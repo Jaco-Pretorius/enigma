@@ -38,24 +38,15 @@ class Rotor
   end
 end
 
-# This appears to be Reflector B-wide https://en.wikipedia.org/wiki/Enigma_rotor_details
 class Reflector
-  MAPPING = {
-    'A' => 'Y', 'B' => 'R', 'C' => 'U', 'D' => 'H', 'E' => 'Q',
-    'F' => 'S', 'G' => 'L', 'H' => 'D', 'I' => 'P', 'J' => 'X',
-    'K' => 'N', 'L' => 'G', 'M' => 'O', 'N' => 'K', 'O' => 'M',
-    'P' => 'I', 'Q' => 'E', 'R' => 'B', 'S' => 'F', 'T' => 'Z',
-    'U' => 'C', 'V' => 'W', 'W' => 'V', 'X' => 'J', 'Y' => 'A',
-    'Z' => 'T'
-  }.freeze
-
-  class << self
-    def encode(letter)
-      MAPPING.fetch(letter)
-    end
+  def initialize(wiring:)
+    alphabet = ('A'..'Z').to_a
+    @mapping = wiring.chars.map.with_index { |letter, index| [alphabet[index], letter] }.to_h
   end
 
-  private_constant :MAPPING
+  def encode(letter)
+    @mapping.fetch(letter)
+  end
 end
 
 class Plugboard
@@ -88,9 +79,10 @@ class Plugboard
 end
 
 class Enigma
-  def initialize(rotors:, plugboard:)
+  def initialize(rotors:, plugboard:, reflector:)
     @rotors = rotors
     @plugboard = plugboard
+    @reflector = reflector
   end
 
   def encrypt(message)
@@ -124,7 +116,7 @@ class Enigma
     end
 
     # Reflect
-    l = Reflector.encode(l)
+    l = @reflector.encode(l)
 
     # Backward through rotors in reverse
     @rotors.reverse.each do |rotor|
@@ -142,6 +134,8 @@ rotor_i = data['rotors'].find { |r| r['name'] == 'I' }
 rotor_ii = data['rotors'].find { |r| r['name'] == 'II' }
 rotor_iii = data['rotors'].find { |r| r['name'] == 'III' }
 
+reflector_b = data['reflectors'].find { |r| r['name'] == 'B' }
+
 enigma = Enigma.new(
   rotors: [
     Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_ii['name'], wiring: rotor_ii['wiring']),
@@ -151,7 +145,8 @@ enigma = Enigma.new(
     Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_iii['name'], wiring: rotor_iii['wiring']),
               position: 19)
   ],
-  plugboard: Plugboard.new(%w[AB JP])
+  plugboard: Plugboard.new(%w[AB JP]),
+  reflector: Reflector.new(wiring: reflector_b['wiring'])
 )
 encrypted = enigma.encrypt('THE WEATHER IS CLEAR')
 puts encrypted
@@ -165,7 +160,8 @@ enigma = Enigma.new(
     Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_iii['name'], wiring: rotor_iii['wiring']),
               position: 19)
   ],
-  plugboard: Plugboard.new(%w[AB JP])
+  plugboard: Plugboard.new(%w[AB JP]),
+  reflector: Reflector.new(wiring: reflector_b['wiring'])
 )
 decrypted = enigma.encrypt(encrypted)
 
