@@ -5,43 +5,45 @@ require 'yaml'
 class RotorConfiguration
   class << self
     def from_yaml(hash)
-      new(name: hash['name'], wiring: hash['wiring'])
+      new(name: hash['name'], wiring: hash['wiring'], notch: hash['notch'])
     end
   end
 
-  attr_reader :name, :wiring
+  attr_reader :name, :wiring, :notch
 
-  def initialize(name:, wiring:)
+  def initialize(name:, wiring:, notch:)
     @name = name
     @wiring = wiring
+    @notch = notch
   end
 end
 
 class Rotor
   attr_reader :position
 
-  def initialize(rotor_configuration:, position:)
-    @rotor_configuration = rotor_configuration
+  def initialize(configuration:, position:)
+    @configuration = configuration
     @position = position
   end
 
   def forward_encode_letter(letter)
     input_index = (letter.ord - 'A'.ord + @position) % 26
-    mapped_letter = @rotor_configuration.wiring[input_index]
+    mapped_letter = @configuration.wiring[input_index]
     output_index = (mapped_letter.ord - 'A'.ord - @position) % 26
     (output_index + 'A'.ord).chr
   end
 
   def backward_encode_letter(letter)
     input_index = (letter.ord - 'A'.ord + @position) % 26
-    index_in_wiring = @rotor_configuration.wiring.index((input_index + 'A'.ord).chr)
+    index_in_wiring = @configuration.wiring.index((input_index + 'A'.ord).chr)
     output_index = (index_in_wiring - @position) % 26
     (output_index + 'A'.ord).chr
   end
 
   def rotate
+    notch_triggered = (@configuration.notch.ord - 'A'.ord) == @position
     @position = (@position + 1) % 26
-    yield if block_given? && @position.zero?
+    yield if block_given? && notch_triggered
   end
 end
 
@@ -143,9 +145,9 @@ reflector_b = data['reflectors'].find { |r| r['name'] == 'B' }
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(rotor_configuration: rotor_ii, position: 12),
-    Rotor.new(rotor_configuration: rotor_i, position: 7),
-    Rotor.new(rotor_configuration: rotor_iii, position: 19)
+    Rotor.new(configuration: rotor_ii, position: 12),
+    Rotor.new(configuration: rotor_i, position: 7),
+    Rotor.new(configuration: rotor_iii, position: 19)
   ],
   plugboard: Plugboard.new(%w[AB JP]),
   reflector: Reflector.new(wiring: reflector_b['wiring'])
@@ -155,9 +157,9 @@ puts encrypted
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(rotor_configuration: rotor_ii, position: 12),
-    Rotor.new(rotor_configuration: rotor_i, position: 7),
-    Rotor.new(rotor_configuration: rotor_iii, position: 19)
+    Rotor.new(configuration: rotor_ii, position: 12),
+    Rotor.new(configuration: rotor_i, position: 7),
+    Rotor.new(configuration: rotor_iii, position: 19)
   ],
   plugboard: Plugboard.new(%w[AB JP]),
   reflector: Reflector.new(wiring: reflector_b['wiring'])
