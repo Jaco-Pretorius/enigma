@@ -3,6 +3,12 @@
 require 'yaml'
 
 class RotorConfiguration
+  class << self
+    def from_yaml(hash)
+      new(name: hash['name'], wiring: hash['wiring'])
+    end
+  end
+
   attr_reader :name, :wiring
 
   def initialize(name:, wiring:)
@@ -130,20 +136,18 @@ end
 
 data = YAML.load_file('enigma.yml')
 
-rotor_i = data['rotors'].find { |r| r['name'] == 'I' }
-rotor_ii = data['rotors'].find { |r| r['name'] == 'II' }
-rotor_iii = data['rotors'].find { |r| r['name'] == 'III' }
+configurations = data['rotors'].map { |hash| RotorConfiguration.from_yaml(hash) }
+rotor_i = configurations.find { |r| r.name == 'I' }
+rotor_ii = configurations.find { |r| r.name == 'II' }
+rotor_iii = configurations.find { |r| r.name == 'III' }
 
 reflector_b = data['reflectors'].find { |r| r['name'] == 'B' }
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_ii['name'], wiring: rotor_ii['wiring']),
-              position: 12),
-    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_i['name'], wiring: rotor_i['wiring']),
-              position: 7),
-    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_iii['name'], wiring: rotor_iii['wiring']),
-              position: 19)
+    Rotor.new(rotor_configuration: rotor_ii, position: 12),
+    Rotor.new(rotor_configuration: rotor_i, position: 7),
+    Rotor.new(rotor_configuration: rotor_iii, position: 19)
   ],
   plugboard: Plugboard.new(%w[AB JP]),
   reflector: Reflector.new(wiring: reflector_b['wiring'])
@@ -153,12 +157,9 @@ puts encrypted
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_ii['name'], wiring: rotor_ii['wiring']),
-              position: 12),
-    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_i['name'], wiring: rotor_i['wiring']),
-              position: 7),
-    Rotor.new(rotor_configuration: RotorConfiguration.new(name: rotor_iii['name'], wiring: rotor_iii['wiring']),
-              position: 19)
+    Rotor.new(rotor_configuration: rotor_ii, position: 12),
+    Rotor.new(rotor_configuration: rotor_i, position: 7),
+    Rotor.new(rotor_configuration: rotor_iii, position: 19)
   ],
   plugboard: Plugboard.new(%w[AB JP]),
   reflector: Reflector.new(wiring: reflector_b['wiring'])
