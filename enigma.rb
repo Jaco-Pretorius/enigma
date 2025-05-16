@@ -1,91 +1,10 @@
 # frozen_string_literal: true
 
 require 'yaml'
-
-class RotorConfiguration
-  class << self
-    def from_yaml(hash)
-      new(name: hash['name'], wiring: hash['wiring'], notch: hash['notch'])
-    end
-  end
-
-  attr_reader :name, :wiring, :notch
-
-  def initialize(name:, wiring:, notch:)
-    @name = name
-    @wiring = wiring
-    @notch = notch
-  end
-end
-
-class Rotor
-  attr_reader :position
-
-  def initialize(configuration:, position:)
-    @configuration = configuration
-    @position = position
-  end
-
-  def forward_encode_letter(letter)
-    input_index = (letter.ord - 'A'.ord + @position) % 26
-    mapped_letter = @configuration.wiring[input_index]
-    output_index = (mapped_letter.ord - 'A'.ord - @position) % 26
-    (output_index + 'A'.ord).chr
-  end
-
-  def backward_encode_letter(letter)
-    input_index = (letter.ord - 'A'.ord + @position) % 26
-    index_in_wiring = @configuration.wiring.index((input_index + 'A'.ord).chr)
-    output_index = (index_in_wiring - @position) % 26
-    (output_index + 'A'.ord).chr
-  end
-
-  def rotate
-    notch_triggered = (@configuration.notch.ord - 'A'.ord) == @position
-    @position = (@position + 1) % 26
-    yield if block_given? && notch_triggered
-  end
-end
-
-class Reflector
-  def initialize(wiring:)
-    alphabet = ('A'..'Z').to_a
-    @mapping = wiring.chars.map.with_index { |letter, index| [alphabet[index], letter] }.to_h
-  end
-
-  def encode(letter)
-    @mapping.fetch(letter)
-  end
-end
-
-class Plugboard
-  def initialize(plugs)
-    # plugs = ["ab", "gd", ...]
-    @plugs = {}
-    used_letters = []
-
-    plugs.each do |pair|
-      l1 = pair[0]
-      l2 = pair[1]
-
-      unless used_letters.include?(l1) || used_letters.include?(l2)
-        @plugs[l1] = l2
-        used_letters << l1 << l2
-      end
-    end
-
-    @invert_plugs = @plugs.invert
-    # Example: {"a"=>"b", "g"=>"d", ...}
-  end
-
-  def forward_encode_letter(l)
-    @plugs.fetch(l, l)
-  end
-
-  def backward_encode_letter(l)
-    @invert_plugs.fetch(l, l)
-  end
-end
+require_relative 'rotor_configuration'
+require_relative 'rotor'
+require_relative 'reflector'
+require_relative 'plugboard'
 
 class Enigma
   def initialize(rotors:, plugboard:, reflector:)

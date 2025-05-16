@@ -1,0 +1,3 @@
+# Disable the rule that requires top-level class/module documentation
+Style/Documentation:
+  Enabled: false
