@@ -16,14 +16,12 @@ class Enigma
 
   def encrypt(message)
     cleaned = message.upcase.chars.select { |c| ('A'..'Z').include?(c) }
-    cleaned.map do |letter|
-      AlphabetHelper.letter_to_index(letter)
-    end.map do |index|
+    letter_indexes = cleaned.map { |letter| AlphabetHelper.letter_to_index(letter) }
+    encrypted_indexes = letter_indexes.map do |index|
       rotate
       encrypt_letter(index)
-    end.map do |index|
-      AlphabetHelper.index_to_letter(index)
-    end.join
+    end
+    encrypted_indexes.map { |index| AlphabetHelper.index_to_letter(index) }.join
   end
 
   private
