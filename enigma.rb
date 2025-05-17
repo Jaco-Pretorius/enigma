@@ -70,9 +70,9 @@ reflector_b = reflectors.find { |r| r.name == 'B' }
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(configuration: rotor_ii, starting_position: 'M'),
-    Rotor.new(configuration: rotor_i, starting_position: 'H'),
-    Rotor.new(configuration: rotor_iii, starting_position: 'T')
+    Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
+    Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
+    Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
   ],
   plugboard: Plugboard.new(%w[AB JP]),
   reflector: reflector_b
@@ -82,9 +82,9 @@ puts encrypted
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(configuration: rotor_ii, starting_position: 'M'),
-    Rotor.new(configuration: rotor_i, starting_position: 'H'),
-    Rotor.new(configuration: rotor_iii, starting_position: 'T')
+    Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
+    Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
+    Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
   ],
   plugboard: Plugboard.new(%w[AB JP]),
   reflector: reflector_b
