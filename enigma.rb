@@ -5,6 +5,7 @@ require_relative 'rotor_configuration'
 require_relative 'rotor'
 require_relative 'reflector'
 require_relative 'plugboard'
+require_relative 'alphabet_helper'
 
 class Enigma
   def initialize(rotors:, plugboard:, reflector:)
@@ -16,8 +17,12 @@ class Enigma
   def encrypt(message)
     cleaned = message.upcase.chars.select { |c| ('A'..'Z').include?(c) }
     cleaned.map do |letter|
+      AlphabetHelper.letter_to_index(letter)
+    end.map do |index|
       rotate
-      encrypt_letter(letter)
+      encrypt_letter(index)
+    end.map do |index|
+      AlphabetHelper.index_to_letter(index)
     end.join
   end
 

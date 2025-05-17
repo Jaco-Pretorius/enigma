@@ -11,7 +11,7 @@ class RotorConfiguration
 
   def initialize(name:, wiring:, notch:)
     @name = name
-    @wiring = wiring
-    @notch = notch
+    @wiring = wiring.chars.map { |letter| AlphabetHelper.letter_to_index(letter) }
+    @notch = AlphabetHelper.letter_to_index(notch)
   end
 end

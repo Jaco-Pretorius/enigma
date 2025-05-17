@@ -7,8 +7,8 @@ class Plugboard
     used_letters = []
 
     plugs.each do |pair|
-      l1 = pair[0]
-      l2 = pair[1]
+      l1 = AlphabetHelper.letter_to_index(pair[0])
+      l2 = AlphabetHelper.letter_to_index(pair[1])
 
       unless used_letters.include?(l1) || used_letters.include?(l2)
         @plugs[l1] = l2
@@ -20,11 +20,11 @@ class Plugboard
     # Example: {"a"=>"b", "g"=>"d", ...}
   end
 
-  def forward_encode_letter(l)
-    @plugs.fetch(l, l)
+  def forward_encode_letter(letter)
+    @plugs.fetch(letter, letter)
   end
 
-  def backward_encode_letter(l)
-    @invert_plugs.fetch(l, l)
+  def backward_encode_letter(letter)
+    @invert_plugs.fetch(letter, letter)
   end
 end

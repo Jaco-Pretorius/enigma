@@ -9,22 +9,17 @@ class Rotor
   end
 
   def forward_encode_letter(letter)
-    input_index = (letter.ord - 'A'.ord + @position) % 26
-    mapped_letter = @configuration.wiring[input_index]
-    output_index = (mapped_letter.ord - 'A'.ord - @position) % 26
-    (output_index + 'A'.ord).chr
+    input_index = (letter + @position) % 26
+    (@configuration.wiring[input_index] - @position) % 26
   end
 
   def backward_encode_letter(letter)
-    input_index = (letter.ord - 'A'.ord + @position) % 26
-    index_in_wiring = @configuration.wiring.index((input_index + 'A'.ord).chr)
-    output_index = (index_in_wiring - @position) % 26
-    (output_index + 'A'.ord).chr
+    input_index = (letter + @position) % 26
+    (@configuration.wiring.index(input_index) - @position) % 26
   end
 
   def rotate
-    notch_triggered = (@configuration.notch.ord - 'A'.ord) == @position
+    yield if block_given? && @configuration.notch == @position
     @position = (@position + 1) % 26
-    yield if block_given? && notch_triggered
   end
 end
