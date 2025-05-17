@@ -3,9 +3,9 @@
 class Rotor
   attr_reader :position
 
-  def initialize(configuration:, position:)
+  def initialize(configuration:, starting_position:)
     @configuration = configuration
-    @position = position
+    @position = AlphabetHelper.letter_to_index(starting_position)
   end
 
   def forward_encode_letter(letter)
