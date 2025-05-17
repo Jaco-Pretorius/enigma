@@ -65,7 +65,8 @@ rotor_i = configurations.find { |r| r.name == 'I' }
 rotor_ii = configurations.find { |r| r.name == 'II' }
 rotor_iii = configurations.find { |r| r.name == 'III' }
 
-reflector_b = data['reflectors'].find { |r| r['name'] == 'B' }
+reflectors = data['reflectors'].map { |hash| Reflector.from_yaml(hash) }
+reflector_b = reflectors.find { |r| r.name == 'B' }
 
 enigma = Enigma.new(
   rotors: [
@@ -74,7 +75,7 @@ enigma = Enigma.new(
     Rotor.new(configuration: rotor_iii, starting_position: 'T')
   ],
   plugboard: Plugboard.new(%w[AB JP]),
-  reflector: Reflector.new(wiring: reflector_b['wiring'])
+  reflector: reflector_b
 )
 encrypted = enigma.encrypt('THE WEATHER IS CLEAR')
 puts encrypted
@@ -86,7 +87,7 @@ enigma = Enigma.new(
     Rotor.new(configuration: rotor_iii, starting_position: 'T')
   ],
   plugboard: Plugboard.new(%w[AB JP]),
-  reflector: Reflector.new(wiring: reflector_b['wiring'])
+  reflector: reflector_b
 )
 decrypted = enigma.encrypt(encrypted)
 
