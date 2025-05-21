@@ -60,32 +60,32 @@ class Enigma
   end
 end
 
-# rotor_i = ConfigurationHelper.rotor_named('I')
-# rotor_ii = ConfigurationHelper.rotor_named('II')
-# rotor_iii = ConfigurationHelper.rotor_named('III')
-# reflector_b = ConfigurationHelper.reflector_named('B')
-#
-# enigma = Enigma.new(
-#   rotors: [
-#     Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
-#     Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
-#     Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
-#   ],
-#   plugboard: Plugboard.new(%w[AB JP]),
-#   reflector: reflector_b
-# )
-# encrypted = enigma.encrypt('THE WEATHER IS CLEAR')
-# puts encrypted
-#
-# enigma = Enigma.new(
-#   rotors: [
-#     Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
-#     Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
-#     Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
-#   ],
-#   plugboard: Plugboard.new(%w[AB JP]),
-#   reflector: reflector_b
-# )
-# decrypted = enigma.encrypt(encrypted)
-#
-# puts decrypted
+rotor_i = ConfigurationHelper.rotor_named('I')
+rotor_ii = ConfigurationHelper.rotor_named('II')
+rotor_iii = ConfigurationHelper.rotor_named('III')
+reflector_b = ConfigurationHelper.reflector_named('B')
+
+enigma = Enigma.new(
+  rotors: [
+    Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
+    Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
+    Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
+  ],
+  plugboard: Plugboard.new(%w[AB JP]),
+  reflector: reflector_b
+)
+encrypted = enigma.encrypt('THE WEATHER IS CLEAR')
+puts encrypted
+
+enigma = Enigma.new(
+  rotors: [
+    Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
+    Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
+    Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
+  ],
+  plugboard: Plugboard.new(%w[AB JP]),
+  reflector: reflector_b
+)
+decrypted = enigma.encrypt(encrypted)
+
+puts decrypted
