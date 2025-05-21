@@ -40,7 +40,7 @@ class Enigma
 
   def encrypt_letter(letter)
     # Pass through plugboard
-    letter = @plugboard.forward_encode_letter(letter)
+    letter = @plugboard.encode_letter(letter)
 
     # Forward through rotors
     @rotors.each do |rotor|
@@ -56,7 +56,7 @@ class Enigma
     end
 
     # Back through plugboard
-    @plugboard.backward_encode_letter(letter)
+    @plugboard.encode_letter(letter)
   end
 end
 
