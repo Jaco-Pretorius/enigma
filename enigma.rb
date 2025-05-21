@@ -29,10 +29,10 @@ class Enigma
 
   def rotate
     @rotors[0].rotate
-    if @rotors[0].position == @rotors[0].rotation_point
+    if @rotors[0].rotation_points.include?(@rotors[0].position)
       @rotors[1].rotate
-      @rotors[2].rotate if @rotors[1].position == @rotors[1].rotation_point
-    elsif @rotors[1].position + 1 == @rotors[1].rotation_point
+      @rotors[2].rotate if @rotors[1].rotation_points.include?(@rotors[1].position)
+    elsif @rotors[1].rotation_points.include?(@rotors[1].position + 1)
       @rotors[1].rotate
       @rotors[2].rotate
     end
@@ -67,23 +67,23 @@ reflector_b = ConfigurationHelper.reflector_named('B')
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
-    Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
-    Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
+    Rotor.new(configuration: rotor_iii, starting_position: 'A', ring_setting: 'A'),
+    Rotor.new(configuration: rotor_ii, starting_position: 'A', ring_setting: 'A'),
+    Rotor.new(configuration: rotor_i, starting_position: 'A', ring_setting: 'A')
   ],
-  plugboard: Plugboard.new(%w[AB JP]),
+  plugboard: Plugboard.new([]),
   reflector: reflector_b
 )
-encrypted = enigma.encrypt('THE WEATHER IS CLEAR')
+encrypted = enigma.encrypt('ACHTUNG')
 puts encrypted
 
 enigma = Enigma.new(
   rotors: [
-    Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
-    Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
-    Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
+    Rotor.new(configuration: rotor_iii, starting_position: 'A', ring_setting: 'A'),
+    Rotor.new(configuration: rotor_ii, starting_position: 'A', ring_setting: 'A'),
+    Rotor.new(configuration: rotor_i, starting_position: 'A', ring_setting: 'A')
   ],
-  plugboard: Plugboard.new(%w[AB JP]),
+  plugboard: Plugboard.new([]),
   reflector: reflector_b
 )
 decrypted = enigma.encrypt(encrypted)

@@ -23,11 +23,11 @@ class Rotor
     @position = (@position + 1) % 26
   end
 
-  def notch
-    @configuration.notch
+  def notches
+    @configuration.notches
   end
 
-  def rotation_point
-    (@configuration.notch + 1) % 26
+  def rotation_points
+    notches.map { |notch| (notch + 1) % 26 }
   end
 end
