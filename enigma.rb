@@ -27,10 +27,13 @@ class Enigma
   private
 
   def rotate
-    @rotors[0].rotate do
-      @rotors[1].rotate do
-        @rotoes[2].rotate
-      end
+    @rotors[0].rotate
+    if @rotors[0].position == @rotors[0].rotation_point
+      @rotors[1].rotate
+      @rotors[2].rotate if @rotors[1].position == @rotors[1].rotation_point
+    elsif @rotors[1].position + 1 == @rotors[1].rotation_point
+      @rotors[1].rotate
+      @rotors[2].rotate
     end
   end
 

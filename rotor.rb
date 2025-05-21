@@ -20,7 +20,14 @@ class Rotor
   end
 
   def rotate
-    yield if block_given? && @configuration.notch == @position
     @position = (@position + 1) % 26
+  end
+
+  def notch
+    @configuration.notch
+  end
+
+  def rotation_point
+    (@configuration.notch + 1) % 26
   end
 end
