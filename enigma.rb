@@ -28,14 +28,13 @@ class Enigma
   private
 
   def rotate
-    @rotors[0].rotate
-    if @rotors[0].rotation_points.include?(@rotors[0].position)
-      @rotors[1].rotate
-      @rotors[2].rotate if @rotors[1].rotation_points.include?(@rotors[1].position)
-    elsif @rotors[1].rotation_points.include?(@rotors[1].position + 1)
+    if @rotors[1].notches.include?(@rotors[1].position)
       @rotors[1].rotate
       @rotors[2].rotate
+    elsif @rotors[0].notches.include?(@rotors[0].position)
+      @rotors[1].rotate
     end
+    @rotors[0].rotate
   end
 
   def encrypt_letter(letter)

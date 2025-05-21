@@ -9,13 +9,13 @@ class Rotor
     @ring_setting = AlphabetHelper.letter_to_index(ring_setting)
   end
 
-  def forward_encode_letter(letter)
-    input_index = (letter + @position - @ring_setting) % 26
+  def forward_encode_letter(letter_index)
+    input_index = (letter_index + @position - @ring_setting + 26) % 26
     (@configuration.wiring[input_index] - @position + @ring_setting) % 26
   end
 
-  def backward_encode_letter(letter)
-    input_index = (letter + @position - @ring_setting) % 26
+  def backward_encode_letter(letter_index)
+    input_index = (letter_index + @position - @ring_setting + 26) % 26
     (@configuration.wiring.index(input_index) - @position + @ring_setting) % 26
   end
 
