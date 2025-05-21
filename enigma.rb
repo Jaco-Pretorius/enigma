@@ -6,6 +6,7 @@ require_relative 'rotor'
 require_relative 'reflector'
 require_relative 'plugboard'
 require_relative 'alphabet_helper'
+require_relative 'configuration_helper'
 
 class Enigma
   def initialize(rotors:, plugboard:, reflector:)
@@ -59,37 +60,32 @@ class Enigma
   end
 end
 
-data = YAML.load_file('enigma.yml')
-
-configurations = data['rotors'].map { |hash| RotorConfiguration.from_yaml(hash) }
-rotor_i = configurations.find { |r| r.name == 'I' }
-rotor_ii = configurations.find { |r| r.name == 'II' }
-rotor_iii = configurations.find { |r| r.name == 'III' }
-
-reflectors = data['reflectors'].map { |hash| Reflector.from_yaml(hash) }
-reflector_b = reflectors.find { |r| r.name == 'B' }
-
-enigma = Enigma.new(
-  rotors: [
-    Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
-    Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
-    Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
-  ],
-  plugboard: Plugboard.new(%w[AB JP]),
-  reflector: reflector_b
-)
-encrypted = enigma.encrypt('THE WEATHER IS CLEAR')
-puts encrypted
-
-enigma = Enigma.new(
-  rotors: [
-    Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
-    Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
-    Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
-  ],
-  plugboard: Plugboard.new(%w[AB JP]),
-  reflector: reflector_b
-)
-decrypted = enigma.encrypt(encrypted)
-
-puts decrypted
+# rotor_i = ConfigurationHelper.rotor_named('I')
+# rotor_ii = ConfigurationHelper.rotor_named('II')
+# rotor_iii = ConfigurationHelper.rotor_named('III')
+# reflector_b = ConfigurationHelper.reflector_named('B')
+#
+# enigma = Enigma.new(
+#   rotors: [
+#     Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
+#     Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
+#     Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
+#   ],
+#   plugboard: Plugboard.new(%w[AB JP]),
+#   reflector: reflector_b
+# )
+# encrypted = enigma.encrypt('THE WEATHER IS CLEAR')
+# puts encrypted
+#
+# enigma = Enigma.new(
+#   rotors: [
+#     Rotor.new(configuration: rotor_ii, starting_position: 'M', ring_setting: 'B'),
+#     Rotor.new(configuration: rotor_i, starting_position: 'H', ring_setting: 'A'),
+#     Rotor.new(configuration: rotor_iii, starting_position: 'T', ring_setting: 'C')
+#   ],
+#   plugboard: Plugboard.new(%w[AB JP]),
+#   reflector: reflector_b
+# )
+# decrypted = enigma.encrypt(encrypted)
+#
+# puts decrypted
