@@ -35,6 +35,29 @@ RSpec.describe Enigma do
     expect(encrypted).to eq('FOTYBPKLBZQSGZBOPUFYPFUSETWKNQQHVNHLKJZZZKHUBEJLGVUNIOYSDTEZJQHHAOYYZSENTGXNJCHEDFHQUCGCGJBURNSEDZSEPLQP')
   end
 
+  it 'correctly encrypts long input' do
+    enigma = Enigma.new(
+      rotors: [
+        Rotor.new(configuration: ConfigurationHelper.rotor_named('VIII'),
+                  starting_position: AlphabetHelper.index_to_letter(9), ring_setting: AlphabetHelper.index_to_letter(19)),
+        Rotor.new(configuration: ConfigurationHelper.rotor_named('VI'),
+                  starting_position: AlphabetHelper.index_to_letter(5), ring_setting: AlphabetHelper.index_to_letter(13)),
+        Rotor.new(configuration: ConfigurationHelper.rotor_named('III'),
+                  starting_position: AlphabetHelper.index_to_letter(3), ring_setting: AlphabetHelper.index_to_letter(11))
+      ],
+      plugboard: Plugboard.new([]),
+      reflector: ConfigurationHelper.reflector_named('B')
+    )
+
+    ciphertext = enigma.encrypt('A' * 500)
+    output = 'YJKJMFQKPCUOCKTEZQVXYZJWJFROVJMWJVXRCQYFCUVBRELVHRWGPYGCHVLBVJEVTTYVMWKJFOZHLJEXYXRDBEVEHVXKQSBPYZN' +
+             'IQDCBGTDDWZQWLHIBQNTYPIEBMNINNGMUPPGLSZCBRJULOLNJSOEDLOBXXGEVTKCOTTLDZPHBUFKLWSFSRKOMXKZELBDJNRUDUCO' +
+             'TNCGLIKVKMHHCYDEKFNOECFBWRIEFQQUFXKKGNTSTVHVITVHDFKIJIHOGMDSQUFMZCGGFZMJUKGDNDSNSJKWKENIRQKSUUHJYMIG' +
+             'WWNMIESFRCVIBFSOUCLBYEEHMESHSGFDESQZJLTORNFBIFUWIFJTOPVMFQCFCFPYZOJFQRFQZTTTOECTDOOYTGVKEWPSZGHCTQRP' +
+             'GZQOVTTOIEGGHEFDOVSUQLLGNOOWGLCLOWSISUGSVIHWCMSIUUSBWQIGWEWRKQFQQRZHMQJNKQTJFDIJYHDFCWTHXUOOCVRCVYOHL'
+    expect(ciphertext).to eq(output)
+  end
+
   it 'correctly encryptes using 4 plugs' do
     enigma = Enigma.new(
       rotors: [
