@@ -5,7 +5,7 @@ require_relative 'rotor_configuration'
 require_relative 'rotor'
 require_relative 'reflector'
 require_relative 'plugboard'
-require_relative 'alphabet_helper'
+require_relative '../alphabet_helper'
 require_relative 'configuration_helper'
 
 class Enigma
@@ -29,11 +29,9 @@ class Enigma
 
   def rotate
     if @rotors[1].notches.include?(@rotors[1].position)
-      puts 'double-stepping'
       @rotors[1].rotate
       @rotors[2].rotate
     elsif @rotors[0].notches.include?(@rotors[0].position)
-      puts 'stepping'
       @rotors[1].rotate
     end
     @rotors[0].rotate
@@ -60,33 +58,3 @@ class Enigma
     @plugboard.encode_letter(letter)
   end
 end
-
-rotor_i = ConfigurationHelper.rotor_named('I')
-rotor_ii = ConfigurationHelper.rotor_named('II')
-rotor_iii = ConfigurationHelper.rotor_named('III')
-reflector_b = ConfigurationHelper.reflector_named('B')
-
-enigma = Enigma.new(
-  rotors: [
-    Rotor.new(configuration: rotor_iii, starting_position: 'A', ring_setting: 'A'),
-    Rotor.new(configuration: rotor_ii, starting_position: 'A', ring_setting: 'A'),
-    Rotor.new(configuration: rotor_i, starting_position: 'A', ring_setting: 'A')
-  ],
-  plugboard: Plugboard.new([]),
-  reflector: reflector_b
-)
-encrypted = enigma.encrypt('ACHTUNG')
-puts encrypted
-
-enigma = Enigma.new(
-  rotors: [
-    Rotor.new(configuration: rotor_iii, starting_position: 'A', ring_setting: 'A'),
-    Rotor.new(configuration: rotor_ii, starting_position: 'A', ring_setting: 'A'),
-    Rotor.new(configuration: rotor_i, starting_position: 'A', ring_setting: 'A')
-  ],
-  plugboard: Plugboard.new([]),
-  reflector: reflector_b
-)
-decrypted = enigma.encrypt(encrypted)
-
-puts decrypted

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../enigma'
+require_relative '../lib/enigma/enigma'
 
 RSpec.describe Enigma do
   it 'correctly encrypts using basic settings' do

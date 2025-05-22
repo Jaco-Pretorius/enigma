@@ -17,7 +17,7 @@ class ConfigurationHelper
     def ensure_loaded
       return if @configurations && @reflectors
 
-      data = YAML.load_file('enigma.yml')
+      data = YAML.load_file(File.expand_path('enigma.yml', __dir__))
       @configurations = data['rotors'].map { |hash| RotorConfiguration.from_yaml(hash) }
       @reflectors = data['reflectors'].map { |hash| Reflector.from_yaml(hash) }
     end
