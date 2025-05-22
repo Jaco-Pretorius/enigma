@@ -108,4 +108,22 @@ RSpec.describe Enigma do
     encrypted = enigma.encrypt('RNXYAZUYTFNQFMBOLNYNYBUYPMWJUQSBYRHPOIRKQSIKBKEKEAJUNNVGUQDODVFQZHASHMQIHSQXICTSJNAUVZYIHVBBARPJADRH')
     expect(encrypted).to eq('CFBJTPYXROYGGVTGBUTEBURBXNUZGGRALBNXIQHVBFWPLZQSCEZWTAWCKKPRSWOGNYXLCOTQAWDRRKBCADTKZGPWSTNYIJGLVIUQ')
   end
+
+  it 'correctly handles the double-stepping of the middle rotor' do
+    # From https://cryptii.com/pipes/enigma-machine
+    enigma = Enigma.new(
+      rotors: [
+        Rotor.new(configuration: ConfigurationHelper.rotor_named('III'),
+                  starting_position: 'Q', ring_setting: 'A'),
+        Rotor.new(configuration: ConfigurationHelper.rotor_named('II'),
+                  starting_position: 'E', ring_setting: 'A'),
+        Rotor.new(configuration: ConfigurationHelper.rotor_named('I'),
+                  starting_position: 'V', ring_setting: 'A')
+      ],
+      plugboard: Plugboard.new([]),
+      reflector: ConfigurationHelper.reflector_named('B')
+    )
+    encrypted = enigma.encrypt('THISISADOUBLESTEPPINGEXAMPLE')
+    expect(encrypted).to eq('MADORQIFXDHODMADHZKRXIJXFZET')
+  end
 end

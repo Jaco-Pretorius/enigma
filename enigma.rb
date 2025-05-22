@@ -29,9 +29,11 @@ class Enigma
 
   def rotate
     if @rotors[1].notches.include?(@rotors[1].position)
+      puts 'double-stepping'
       @rotors[1].rotate
       @rotors[2].rotate
     elsif @rotors[0].notches.include?(@rotors[0].position)
+      puts 'stepping'
       @rotors[1].rotate
     end
     @rotors[0].rotate
